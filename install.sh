@@ -48,6 +48,6 @@ do
         else
                 echo -e "\e[1m\e[100mThêm node ${instance} vào k8s controller \e[0m"
                 TOKEN=$(tail -n 2 init.txt | sed -z 's/\n//g;s/\\//')
-                echo -e "\e[1m\e[100m ${TOKEN} \e[0m"
+                multipass exec k3s-${instance} -- sudo bash -c "$TOKEN"
         fi
 done
