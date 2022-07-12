@@ -1,7 +1,7 @@
 #!/bin/bash
 for instance in controller node1 node2;
 do
-        echo -e "\e[1m\e[100mTạo ${instanc}\e[0m"
+        echo -e "\e[1m\e[100mTạo ${instance}\e[0m"
         multipass launch --name k3s-${instance} --cpus 2 --mem 1024M --disk 10G
 
         echo -e "\e[1m\e[100mCài và chạy docker trên controller\e[0m"
