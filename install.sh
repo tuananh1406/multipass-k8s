@@ -41,13 +41,16 @@ do
                 multipass exec k3s-${instance} -- bash -c "sudo kubeadm init --pod-network-cidr=${IP}/16 --ignore-preflight-errors=Mem" > ./init.txt
                 TOKEN=$(tail -n 2 init.txt | sed -z 's/\n//g;s/\\//')
                 echo -e "\e[1m\e[100m ${TOKEN} \e[0m"
-                multipass exec k3s-${instance} -- sudo bash -c 'mkdir -p $HOME/.kube'
-                multipass exec k3s-${instance} -- sudo bash -c 'sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config'
-                multipass exec k3s-${instance} -- sudo bash -c 'sudo chown $(id -u):$(id -g) $HOME/.kube/config'
-                multipass exec k3s-${instance} -- sudo bash -c 'sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml'
+                multipass exec k3s-${instance} -- bash -c 'mkdir -p $HOME/.kube'
+                multipass exec k3s-${instance} -- bash -c 'sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config'
+                multipass exec k3s-${instance} -- bash -c 'sudo chown $(id -u):$(id -g) $HOME/.kube/config'
+                multipass exec k3s-${instance} -- bash -c 'sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml'
         else
                 echo -e "\e[1m\e[100mThêm node ${instance} vào k8s controller \e[0m"
                 TOKEN=$(tail -n 2 init.txt | sed -z 's/\n//g;s/\\//')
                 multipass exec k3s-${instance} -- sudo bash -c "$TOKEN"
         fi
 done
+
+echo -e "\e[1m\e[100m Kiểm tra k8s cluster \e[0m"
+multipass exec k3s-controller -- bash -c 'kubectl get nodes'
